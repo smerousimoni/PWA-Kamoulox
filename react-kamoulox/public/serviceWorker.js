@@ -1,7 +1,29 @@
 console.log('hello from sw');
+const version = "v1"
+const assetsToCache = [
+    '/',
+    'index.html',
+    '../src/index.js',
+    'styles.css',
+    'manifest.webmanifest',
+    'images/icon-192x192.png',
+    'images/icon-256x256.png',
+    'images/icon-512x512.png',
+    'images/logo.png',
+    'images/icon-72x72.png'
+  ];
+
+const cacheName = 'veille-techno' + '1.0';
 
 self.addEventListener('install', (evt) => {
     console.log(`sw installé à ${new Date().toLocaleTimeString()}`);
+    const cachePromise = caches.open(cacheName).then(cache =>{
+        return cache.addAll(assetsToCache)
+        .then(console.log('cache initialisé'))
+        .catch(console.err);
+    })
+
+    evt.waitUntil(cachePromise);
 });
 
 self.addEventListener('activate', (evt) => {
@@ -17,7 +39,6 @@ self.addEventListener('activate', (evt) => {
     evt.waitUntil(cacheCleanPromise);
 });
 	
-const cacheName = 'veille-techno' + '1.2';
 
 self.addEventListener('fetch', (evt) => {
     evt.respondWith(
@@ -33,23 +54,14 @@ self.addEventListener('fetch', (evt) => {
     );
 });
 
-self.addEventListener("push", (e) => {
-    let data
-    if (e.data) {
-        data = e.data.json()
-    }
+self.addEventListener("push", evt => {
+    console.log("push event", evt);
+    console.log("data envoyée par la push notification :", evt.data.text());
 
-    console.log('data for notification', data);
-
-    const options = {
-        body: data.body,
-        icon: '/img/icons/android-chrome-192x192.png',
-        image: '/img/autumn-forest.png',
-        vibrate: [300, 200, 300],
-        badge: '/img/icons/plint-badge-96x96.png',
-    }
-
-    console.log('options passed to Notification', options);
-
-    e.waitUntil(self.registration.showNotification(data.title, options))
+    const title = evt.data.text();
+    const objNotification = {
+        body: "ça fonctionne", 
+        icon : "images/icon-72x72.png"
+    };
+    self.registration.showNotification(title, objNotification);
 })

@@ -36,7 +36,7 @@ class AppQuestion extends Component{
         const {listeQuestions, etape, reponseCliquer,score} = this.state
         if(!reponseCliquer){
             if(indexReponse===listeQuestions[etape].indexBonneReponse){
-                if ( Math.floor(Math.random() * Math.floor(100) == 2)){
+                if ( Math.floor(Math.random() * Math.floor(100) === 2)){
                     this.setState({
                         reponseCorrect:true,
                         reponseCliquer:true,
@@ -93,7 +93,7 @@ class AppQuestion extends Component{
         if (this.state.score >= 10 && this.state.nbBonus < 3){
             let reponse = document.getElementsByClassName("reponse");
             for(let i=0;i<reponse.length;i++){
-                if (reponse[i].id != listeQuestions[etape].indexBonneReponse && reponse[i].style.opacity !="0"){
+                if (reponse[i].id !== listeQuestions[etape].indexBonneReponse && reponse[i].style.opacity !=="0"){
                     reponse[i].style.opacity="0";
                     this.setState({
                         nbBonus:nbBonus+1               
