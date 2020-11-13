@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {getQuestions} from '../fonctions/appelleApi';
 import Question from './Question';
 import Reponse from './Reponse'
+import logo from '../icon-72x72.png'
 
 class AppQuestion extends Component{
     constructor(props){
@@ -12,7 +13,9 @@ class AppQuestion extends Component{
             reponseCorrect:false,
             reponseCliquer:false,
             score:0,
-            nbBonus:0
+            nbBonus:0,
+            nbReponseCorrect:0,
+            streak:false
         }
     }
 
@@ -31,11 +34,41 @@ class AppQuestion extends Component{
             console.log(this.state.listeQuestions)
         })
     }
+    
+    showNotification = (title, desc, img) => {
+        if(window.Notification && window.Notification !== "denied"){ 
+            Notification.requestPermission(perm => {
+                if(perm === "granted"){
+     
+                    const options = {
+                        body : desc,
+                        icon : logo
+                    }
+         
+                    var notif = new Notification(title, options);
+                  
+                }
+                else{ 
+                    console.log("Notification refusée");
+                }
+            })
+        }
+    }
 
     verifReponse = (indexReponse) => {
-        const {listeQuestions, etape, reponseCliquer,score} = this.state
+        const {listeQuestions, etape, reponseCliquer,score,streak,nbReponseCorrect} = this.state
         if(!reponseCliquer){
             if(indexReponse===listeQuestions[etape].indexBonneReponse){
+                if(streak){
+                    this.setState({
+                        nbReponseCorrect:nbReponseCorrect+1
+                    })
+                }else{
+                    this.setState({
+                        nbReponseCorrect:nbReponseCorrect+1,
+                        streak:true
+                    })
+                }
                 if ( Math.floor(Math.random() * Math.floor(100) === 2)){
                     this.setState({
                         reponseCorrect:true,
@@ -49,11 +82,16 @@ class AppQuestion extends Component{
                         score:score+Math.floor(Math.random() * Math.floor(20))
                     });
                 }
+                if(this.state.nbReponseCorrect==10){
+                    this.showNotification("LA CHATTE","Vous avez atteins 10 bonnes réponses à la suite !")
+                }
             }else{
                 this.setState({
                     reponseCorrect:false,
                     reponseCliquer:true,
-                    score:score-Math.floor(Math.random() * Math.floor(3))
+                    score:score-Math.floor(Math.random() * Math.floor(3)),
+                    nbReponseCorrect:0,
+                    streak:false
                 })
             }
         }
@@ -93,7 +131,9 @@ class AppQuestion extends Component{
         if (this.state.score >= 10 && this.state.nbBonus < 3){
             let reponse = document.getElementsByClassName("reponse");
             for(let i=0;i<reponse.length;i++){
-                if (reponse[i].id !== listeQuestions[etape].indexBonneReponse && reponse[i].style.opacity !=="0"){
+                if (reponse[i].id != listeQuestions[etape].indexBonneReponse && reponse[i].style.opacity !=="0"){
+                    console.log("réponse[i]: "+reponse[i].id)
+                    console.log("listQuestion: "+listeQuestions[etape].indexBonneReponse)
                     reponse[i].style.opacity="0";
                     this.setState({
                         nbBonus:nbBonus+1               
@@ -104,6 +144,13 @@ class AppQuestion extends Component{
             this.setState({
                 score:score-10                
             })
+        }else{
+            if(this.state.score < 10 && this.state.nbBonus < 3){
+                this.showNotification("Vous êtes pauvre","Vous n'avez que "+score+" points")
+            }
+            if(this.state.nbBonus >= 3){
+                this.showNotification("Are you dumb ?","Tous vos bonus ont été utilisés")
+            }
         }
     }
 
