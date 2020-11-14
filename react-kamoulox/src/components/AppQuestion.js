@@ -24,14 +24,13 @@ class AppQuestion extends Component{
     }
 
     initQuestions = () => {
-        getQuestions(10).then(data =>{
+        getQuestions(50).then(data =>{
             this.setState(
                 {
                     listeQuestions:data,
                     etape:0
                 }
             )
-            console.log(this.state.listeQuestions)
         })
     }
     
@@ -82,8 +81,11 @@ class AppQuestion extends Component{
                         score:score+Math.floor(Math.random() * Math.floor(20))
                     });
                 }
-                if(this.state.nbReponseCorrect==10){
-                    this.showNotification("LA CHATTE","Vous avez atteins 10 bonnes réponses à la suite !")
+                if(this.state.nbReponseCorrect===10){
+                    this.showNotification("LA CHATTE","Vous avez atteint 10 bonnes réponses à la suite !")
+                }
+                if(this.state.nbReponseCorrect===30){
+                    this.showNotification("TU DEVRAIS APPELER TA FEMME POUR SAVOIR CE QU'ELLE FAIT","Vous avez atteint 30 bonnes réponses à la suite !")
                 }
             }else{
                 this.setState({
@@ -106,8 +108,6 @@ class AppQuestion extends Component{
             reponseCliquer:false,
             nbBonus:0
         });
-        console.log(this.state.listeQuestions.length)
-        console.log(this.state.etape)
     }
 
     setAllDef = () => {
@@ -122,7 +122,6 @@ class AppQuestion extends Component{
         for(let i=0;i<reponse.length;i++){
             reponse[i].style.backgroundColor="#f74b4b";
         }
-        console.log("Bonne réponse: "+this.state.listeQuestions[this.state.etape].indexBonneReponse)
         document.getElementById(this.state.listeQuestions[this.state.etape].indexBonneReponse).style.backgroundColor="#36e54b";
     }
 
@@ -132,8 +131,6 @@ class AppQuestion extends Component{
             let reponse = document.getElementsByClassName("reponse");
             for(let i=0;i<reponse.length;i++){
                 if (reponse[i].id != listeQuestions[etape].indexBonneReponse && reponse[i].style.opacity !=="0"){
-                    console.log("réponse[i]: "+reponse[i].id)
-                    console.log("listQuestion: "+listeQuestions[etape].indexBonneReponse)
                     reponse[i].style.opacity="0";
                     this.setState({
                         nbBonus:nbBonus+1               
@@ -159,8 +156,6 @@ class AppQuestion extends Component{
         if(listeQuestions.length>0){
             return (
                 <div>
-                    {console.log(etape)}
-                    {console.log(listeQuestions.length)}
                     {etape < listeQuestions.length ?
                         (<>
                         <Question enonce={listeQuestions[etape].enonce}/>
@@ -173,16 +168,16 @@ class AppQuestion extends Component{
                         />
                         <div id="score">Score : {score}</div>
                         <div id="bonus" onClick={() => this.maskFalseAns()}>Bonus ! (10Pts)</div>
-                        <button id="bouton" disabled={
+                        <button className="bouton" disabled={
                             reponseCliquer && listeQuestions.length >= etape
                             ? false : true
                         }
                         onClick={() => this.nextStep(etape)}>Suivant</button>
                         </>):(
                             <div>
-                                <h1>Quiz terminé</h1>
-                                <p>Merci !</p>
-                                <button onClick={() => this.initQuestions()}>Nouveau Quiz</button>
+                                <div className="titre">Quiz terminé</div>
+                                <div className="texte">Merci !</div>
+                                <button className="bouton" onClick={() => this.initQuestions()}>Nouveau Quiz</button>
                             </div>
                         )
                     }
