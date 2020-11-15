@@ -18,6 +18,7 @@
         -o-animation: regionBg 5s linear infinite;
     }
     
+
     #logo{
         height: 200px;
         width: 395px;
@@ -28,7 +29,7 @@
         top: 00px;
         left: calc(50vw - 395px / 2);
     }
-    
+
     .titre{
         width: 100%;
         text-align: center;
@@ -63,23 +64,48 @@
         top: -15px;
     }
     
-    .reponse{
-        width: 30vw;
-        padding: 15px 10px;
-        background-color: #00f3ff;
-        border: 5px solid rgba(255, 255, 255, 0.6);
-        border-radius: 10px;
-        display: inline-block;
-        color: white;
-        font-size: 25px;
-        font-weight: bold;
-        font-family: 'Pacifico', cursive;
-        margin: 20px;
-        -webkit-transition: all .3s;
-        -moz-transition: all .3s;
-        -o-transition: all .3s;
-        transition: all .3s;
-        cursor: pointer;
+    @media screen and (orientation:portrait) { 
+        .reponse{
+            width: 100%;
+            padding: 30px 10px;
+            background-color: #00f3ff;
+            border: 5px solid rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            display: inline-block;
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+            font-family: 'Pacifico', cursive;
+            margin: 30px;
+            -webkit-transition: all .3s;
+            -moz-transition: all .3s;
+            -o-transition: all .3s;
+            transition: all .3s;
+            cursor: pointer;
+           box-sizing:border-box;
+        }
+    }
+
+    @media screen and (orientation:landscape) {
+        .reponse{
+            width: 30vw;
+            padding: 15px 10px;
+            background-color: #00f3ff;
+            border: 5px solid rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            display: inline-block;
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+            font-family: 'Pacifico', cursive;
+            margin: 20px;
+            -webkit-transition: all .3s;
+            -moz-transition: all .3s;
+            -o-transition: all .3s;
+            transition: all .3s;
+            cursor: pointer;
+            box-sizing:border-box;
+        }
     }
     
     .reponse:hover{
@@ -132,10 +158,9 @@
     }
     
     .bouton{
-        position : absolute;
         right: 15px;
         background-color: #fff0;
-        padding: 7px;
+        padding: 10px;
         border-radius: 8px;
         border: 1px solid #fff;
         text-align: center;
@@ -147,6 +172,10 @@
         left: calc(50vw - 100px);
         font-size: 30px;
         width: 200px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1em;
+        display: block;
     }
     
     @-webkit-keyframes regionBg {
